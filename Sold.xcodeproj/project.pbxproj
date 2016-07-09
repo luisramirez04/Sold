@@ -12,6 +12,9 @@
 		A0681B611D2C42BF00CAF35F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A0681B5F1D2C42BF00CAF35F /* Main.storyboard */; };
 		A0681B631D2C42BF00CAF35F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0681B621D2C42BF00CAF35F /* Assets.xcassets */; };
 		A0681B661D2C42BF00CAF35F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A0681B641D2C42BF00CAF35F /* LaunchScreen.storyboard */; };
+		A0681B6E1D2C432100CAF35F /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0681B6D1D2C432100CAF35F /* FBSDKLoginKit.framework */; };
+		A0681B701D2C433200CAF35F /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0681B6F1D2C433200CAF35F /* FBSDKCoreKit.framework */; };
+		A0681B721D2C434000CAF35F /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0681B711D2C434000CAF35F /* FBSDKShareKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +25,9 @@
 		A0681B621D2C42BF00CAF35F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A0681B651D2C42BF00CAF35F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A0681B671D2C42BF00CAF35F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A0681B6D1D2C432100CAF35F /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		A0681B6F1D2C433200CAF35F /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		A0681B711D2C434000CAF35F /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +35,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A0681B6E1D2C432100CAF35F /* FBSDKLoginKit.framework in Frameworks */,
+				A0681B701D2C433200CAF35F /* FBSDKCoreKit.framework in Frameworks */,
+				A0681B721D2C434000CAF35F /* FBSDKShareKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +49,9 @@
 			children = (
 				A0681B5A1D2C42BF00CAF35F /* Sold */,
 				A0681B591D2C42BF00CAF35F /* Products */,
+				A0681B711D2C434000CAF35F /* FBSDKShareKit.framework */,
+				A0681B6F1D2C433200CAF35F /* FBSDKCoreKit.framework */,
+				A0681B6D1D2C432100CAF35F /* FBSDKLoginKit.framework */,
 			);
 			sourceTree = "<group>";
 		};
@@ -249,6 +261,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = Sold/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = theramirez.Sold;
@@ -260,6 +276,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = Sold/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = theramirez.Sold;
