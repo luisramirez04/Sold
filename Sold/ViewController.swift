@@ -212,6 +212,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 destination.toDate = toDate
                 destination.searchTerm = searchTF.text!
                 destination.groupID = currentGroupID
+                destination.getResults()
+                
             }
         }
     }

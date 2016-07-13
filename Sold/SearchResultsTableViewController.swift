@@ -34,7 +34,11 @@ class SearchResultsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("done")
         
+    }
+    
+    func getResults() {
         self.albumIDArray.removeAll(keepCapacity: true)
         self.photoIDArray.removeAll(keepCapacity: true)
         self.commentIDArray.removeAll(keepCapacity: true)
@@ -113,24 +117,22 @@ class SearchResultsTableViewController: UITableViewController {
                                                     print(error)
                                                 } else if error == nil {
                                                     
-                                                    //2 with "flight"
-                                                    /* if let commentMessage = result["message"]! {
-                                                     
-                                                     self.commentMessage.append(commentMessage as! String)
-                                                     print(self.commentMessage)
-                                                     }
-                                                     
-                                                     if let commentUser = result["name"]! {
-                                                     
-                                                     self.commentFrom.append(commentUser as! String)
-                                                     print(self.commentFrom)
-                                                     }
-                                                     
-                                                     if let commentTime = result["created_time"]! {
-                                                     
-                                                     self.commentTime.append(commentTime as! String)
-                                                     print(self.commentTime)
-                                                     } */
+                                                    
+                                                    
+                                                    if let commentMessage = result["message"]! {
+                                                        
+                                                        self.commentMessage.append(commentMessage as! String)
+                                                        print(self.commentMessage.count)
+                                                    }
+                                                    
+                                                    if let commentUser = result["name"]! {
+                                                        
+                                                        self.commentFrom.append(commentUser as! String)
+                                                        print(self.commentFrom.count)
+                                                    }
+                                                    
+                                                    
+                                                    
                                                     
                                                 }
                                             }
@@ -172,6 +174,12 @@ class SearchResultsTableViewController: UITableViewController {
         myCell.user.text = commentFrom[indexPath.row]
         
         return myCell
+    }
+    
+    func getCommentsFromResult(coms: [String]) -> [String] {
+        
+        let finalcoms = coms
+        return finalcoms
     }
     
     
