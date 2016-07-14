@@ -16,7 +16,7 @@
 		A0681B701D2C433200CAF35F /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0681B6F1D2C433200CAF35F /* FBSDKCoreKit.framework */; };
 		A0681B721D2C434000CAF35F /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0681B711D2C434000CAF35F /* FBSDKShareKit.framework */; };
 		A0681B761D318C7A00CAF35F /* SearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0681B751D318C7A00CAF35F /* SearchResultsTableViewController.swift */; };
-		A0681B781D318C9200CAF35F /* SearchCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0681B771D318C9200CAF35F /* SearchCells.swift */; };
+		A0681B7E1D380A0000CAF35F /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0681B7D1D380A0000CAF35F /* Cell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,7 +31,7 @@
 		A0681B6F1D2C433200CAF35F /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		A0681B711D2C434000CAF35F /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
 		A0681B751D318C7A00CAF35F /* SearchResultsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsTableViewController.swift; sourceTree = "<group>"; };
-		A0681B771D318C9200CAF35F /* SearchCells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchCells.swift; sourceTree = "<group>"; };
+		A0681B7D1D380A0000CAF35F /* Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,7 +74,7 @@
 				A0681B5D1D2C42BF00CAF35F /* ViewController.swift */,
 				A0681B5F1D2C42BF00CAF35F /* Main.storyboard */,
 				A0681B751D318C7A00CAF35F /* SearchResultsTableViewController.swift */,
-				A0681B771D318C9200CAF35F /* SearchCells.swift */,
+				A0681B7D1D380A0000CAF35F /* Cell.swift */,
 				A0681B621D2C42BF00CAF35F /* Assets.xcassets */,
 				A0681B641D2C42BF00CAF35F /* LaunchScreen.storyboard */,
 				A0681B671D2C42BF00CAF35F /* Info.plist */,
@@ -154,7 +154,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A0681B5E1D2C42BF00CAF35F /* ViewController.swift in Sources */,
-				A0681B781D318C9200CAF35F /* SearchCells.swift in Sources */,
+				A0681B7E1D380A0000CAF35F /* Cell.swift in Sources */,
 				A0681B5C1D2C42BF00CAF35F /* AppDelegate.swift in Sources */,
 				A0681B761D318C7A00CAF35F /* SearchResultsTableViewController.swift in Sources */,
 			);
@@ -314,6 +314,7 @@
 				A0681B6C1D2C42BF00CAF35F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

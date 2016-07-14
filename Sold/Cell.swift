@@ -1,22 +1,16 @@
 //
-//  SearchCells.swift
+//  Cell.swift
 //  Sold
 //
-//  Created by Luis Ramirez on 7/9/16.
+//  Created by Luis Ramirez on 7/14/16.
 //  Copyright © 2016 Luis Ramirez. All rights reserved.
 //
 
 import UIKit
 
-class SearchCells: UITableViewCell {
+class Cell: UITableViewCell {
 
-
-    
-    @IBOutlet weak var imageForComment: UIImageView!
-    @IBOutlet weak var user: UILabel!
-    @IBOutlet weak var commentMessage: UILabel!
-
-    @IBOutlet weak var commentTime: UILabel!
+    @IBOutlet weak var commentUserLabel: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

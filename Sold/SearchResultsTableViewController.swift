@@ -24,7 +24,7 @@ class SearchResultsTableViewController: UITableViewController {
     var commentIDArray = [""]
     var commentMessage = [""]
     var commentFrom = [""]
-    var commentObject = [AnyObject]()
+    var commentObject = [UIImage]()
     var finalCommentArray = []
     var commentTime = [""]
     var dateFormatter = NSDateFormatter()
@@ -34,7 +34,7 @@ class SearchResultsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        getResults()
+        
     }
     
     func getResults() {
@@ -47,6 +47,7 @@ class SearchResultsTableViewController: UITableViewController {
         self.matchedCommentsDates.removeAll(keepCapacity: true)
         self.commentsThatMatch.removeAll(keepCapacity: true)
         self.firstMatch.removeAll(keepCapacity: true)
+        self.commentObject.removeAll(keepCapacity: true)
         
         
         FBSDKGraphRequest.init(graphPath: "\(groupID)/albums", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
@@ -66,7 +67,6 @@ class SearchResultsTableViewController: UITableViewController {
                                 print(error)
                             } else if error == nil {
                                 
-                                print(result)
                                 
                                 self.photoIDResultArray = result["data"] as! NSArray
                                 
@@ -79,10 +79,10 @@ class SearchResultsTableViewController: UITableViewController {
                                                 print(error)
                                             } else if error == nil {
                                                 
-                                                print("3")
+                                                
                                                 
                                                 self.commentsIDResultArray = result["data"] as! NSArray
-                                                //24 times
+                                                
                                                 
                                                 for commentResult in self.commentsIDResultArray { // loop through data items
                                                     
@@ -92,28 +92,56 @@ class SearchResultsTableViewController: UITableViewController {
                                                             
                                                             if let matchedCommentID = commentResult["id"] as? String {
                                                             
-                                                            FBSDKGraphRequest.init(graphPath: "/\(matchedCommentID)/", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
+                                                            FBSDKGraphRequest.init(graphPath: "/\(matchedCommentID)", parameters: ["fields":"id, from, created_time, message, object"]).startWithCompletionHandler { (connection, result, error) -> Void in
                                                                 if error != nil {
                                                                     print(error)
                                                                 } else if error == nil {
                                                                     
-                                                                    print("4")
+                                                                    if let commentMessage = result["message"]! {
+                                                                        
+                                                                        
+                                                                        
+                                                                            self.commentMessage.append(commentMessage as! String)
+                                                                         
+                                                                        
+                                                                        
+                                                                    }
                                                                     
-                                                                    /* if let commentMessage = result["message"]! {
-                                                                     
-                                                                     self.commentMessage.append(commentMessage as! String)
-                                                                     print(self.commentMessage.count)
-                                                                     }
-                                                                     
-                                                                     if let commentUser = result["name"]! {
-                                                                     
-                                                                     self.commentFrom.append(commentUser as! String)
-                                                                     print(self.commentFrom.count)
-                                                                     }
-                                                                     
-                                                                     
-                                                                     
-                                                                     */
+                                                                    if let commentTime = result["created_time"] {
+                                                                        self.commentTime.append(commentTime as! String)
+                                                                    }
+                                                                    
+                                                                    if let thePerson = result["from"] as? NSDictionary {
+                                                                    self.commentFrom.append(thePerson["name"] as! String)
+                                                                    }
+                                                                    
+                                                                    if let theObject = result["object"] as? NSDictionary {
+                                                                        let theObjectID = theObject["id"] as! String
+                                                                        
+                                                                        FBSDKGraphRequest.init(graphPath: "/\(theObjectID)", parameters: ["fields":"picture.type(large)"]).startWithCompletionHandler { (connection, result, error) -> Void in
+                                                                            if error != nil {
+                                                                                print(error)
+                                                                            } else if error == nil {
+                                                                                
+                                                                                
+                                                                                if let imageURLString = result["picture"] as? String {
+                                                                                    
+                                                                                    let imageURL = NSURL(string: imageURLString)
+                                                                                    let data = NSData(contentsOfURL: imageURL!)
+                                                                                    self.commentObject.append(UIImage(data: data!)!)
+                                                                                    
+                                               
+                                                                
+                                                                                    
+                                                                                    
+                                                                                }
+                                                                            }
+                                                                        }
+                                        
+                                                                    
+                                                                    }
+                                                                   
+                                                                    
                                                                 }
                                                             }
                                                             
@@ -158,12 +186,11 @@ class SearchResultsTableViewController: UITableViewController {
     
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let myCell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as! SearchCells
+        let myCell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as! Cell
         
         
-        myCell.comment.text = commentMessage[indexPath.row]
-        myCell.date.text = commentTime[indexPath.row]
-        myCell.user.text = commentFrom[indexPath.row]
+        myCell.commentUserLabel.text = commentMessage[indexPath.row]
+        
         
         return myCell
     }
