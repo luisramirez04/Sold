@@ -34,8 +34,7 @@ class SearchResultsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("done")
-        
+        getResults()
     }
     
     func getResults() {
@@ -50,98 +49,91 @@ class SearchResultsTableViewController: UITableViewController {
         self.firstMatch.removeAll(keepCapacity: true)
         
         
-        FBSDKGraphRequest.init(graphPath: "\(groupID)/albums/", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
+        FBSDKGraphRequest.init(graphPath: "\(groupID)/albums", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
             if error != nil {
                 print(error)
             } else if error == nil {
                 
+                
                 self.albumResultArray = result["data"] as! NSArray
                 
-                for item in self.albumResultArray { // loop through data items
+                for arrayResult in self.albumResultArray { // loop through data items
                     
-                    if let AlbumID = item["id"]! {
+                    if let AlbumID = arrayResult["id"] as? String {
                         
-                        self.albumIDArray.append(AlbumID as! String)
-                        
-                    }
-                }
-                
-                
-                for albums in self.albumIDArray {
-                    FBSDKGraphRequest.init(graphPath: "\(albums)/photos", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
-                        if error != nil {
-                            print(error)
-                        } else if error == nil {
-                            
-                            self.photoIDResultArray = result["data"] as! NSArray
-                            
-                            
-                            for item in self.photoIDResultArray { // loop through data items
+                        FBSDKGraphRequest.init(graphPath: "\(AlbumID)/photos", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
+                            if error != nil {
+                                print(error)
+                            } else if error == nil {
                                 
-                                if let photos = item["id"]! {
+                                print(result)
+                                
+                                self.photoIDResultArray = result["data"] as! NSArray
+                                
+                                for photoResult in self.photoIDResultArray { // loop through data items
                                     
-                                    self.photoIDArray.append(photos as! String)
-                                    
-                                    
-                                }
-                            }
-                            
-                            for photosID in self.photoIDArray {
-                                FBSDKGraphRequest.init(graphPath: "\(photosID)/comments", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
-                                    if error != nil {
-                                        print(error)
-                                    } else if error == nil {
+                                    if let photos = photoResult["id"] as? String {
                                         
-                                        self.commentsIDResultArray = result["data"] as! NSArray
-                                        //24 times
-                                        
-                                        for item in self.commentsIDResultArray { // loop through data items
-                                            
-                                            if let comments = item["message"]! {
+                                        FBSDKGraphRequest.init(graphPath: "\(photos)/comments", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
+                                            if error != nil {
+                                                print(error)
+                                            } else if error == nil {
                                                 
-                                                if comments.containsString(self.searchTerm) {
+                                                print("3")
+                                                
+                                                self.commentsIDResultArray = result["data"] as! NSArray
+                                                //24 times
+                                                
+                                                for commentResult in self.commentsIDResultArray { // loop through data items
                                                     
-                                                    self.commentsThatMatch.append(item["id"] as! String)
-                                                    self.firstMatch.append(self.commentsThatMatch.first!)
-                                                    
+                                                    if let comments = commentResult["message"] as? String {
+                                                        
+                                                        if comments.containsString(self.searchTerm) {
+                                                            
+                                                            if let matchedCommentID = commentResult["id"] as? String {
+                                                            
+                                                            FBSDKGraphRequest.init(graphPath: "/\(matchedCommentID)/", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
+                                                                if error != nil {
+                                                                    print(error)
+                                                                } else if error == nil {
+                                                                    
+                                                                    print("4")
+                                                                    
+                                                                    /* if let commentMessage = result["message"]! {
+                                                                     
+                                                                     self.commentMessage.append(commentMessage as! String)
+                                                                     print(self.commentMessage.count)
+                                                                     }
+                                                                     
+                                                                     if let commentUser = result["name"]! {
+                                                                     
+                                                                     self.commentFrom.append(commentUser as! String)
+                                                                     print(self.commentFrom.count)
+                                                                     }
+                                                                     
+                                                                     
+                                                                     
+                                                                     */
+                                                                }
+                                                            }
+                                                            
+                                                            }
+                                                        }
+                                                        
+                                                    }
                                                     
                                                 }
                                                 
-                                            }
-                                            
-                                        }
-                                        
-                                        for matchedComms in self.firstMatch {
-                                            FBSDKGraphRequest.init(graphPath: "/\(matchedComms)/", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
-                                                if error != nil {
-                                                    print(error)
-                                                } else if error == nil {
-                                                    
-                                                    
-                                                    
-                                                    if let commentMessage = result["message"]! {
-                                                        
-                                                        self.commentMessage.append(commentMessage as! String)
-                                                        print(self.commentMessage.count)
-                                                    }
-                                                    
-                                                    if let commentUser = result["name"]! {
-                                                        
-                                                        self.commentFrom.append(commentUser as! String)
-                                                        print(self.commentFrom.count)
-                                                    }
-                                                    
-                                                    
-                                                    
-                                                    
-                                                }
                                             }
                                         }
                                     }
                                 }
+                                
                             }
+                            
                         }
                     }
+                    
                 }
             }
         }
@@ -181,6 +173,7 @@ class SearchResultsTableViewController: UITableViewController {
         let finalcoms = coms
         return finalcoms
     }
+    
     
     
     /*
