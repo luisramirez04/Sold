@@ -12,8 +12,7 @@ import FBSDKCoreKit
 
 class SearchResultsTableViewController: UITableViewController {
     
-    var fromDate = String()
-    var toDate = String()
+
     var searchTerm = String()
     var groupID = String()
     var albumResultArray = []
@@ -27,18 +26,25 @@ class SearchResultsTableViewController: UITableViewController {
     var commentObject = [UIImage]()
     var finalCommentArray = []
     var commentTime = [""]
-    var dateFormatter = NSDateFormatter()
+    var df = NSDateFormatter()
     var commentsThatMatch = [""]
     var matchedCommentsDates = [""]
     var firstMatch = [""]
+    var matchedCommentIDs = [""]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.title = searchTerm
+
+            getResults()
+
+        
     }
     
-    func getResults() {
+    private func getResults() {
         self.albumIDArray.removeAll(keepCapacity: true)
+        self.matchedCommentIDs.removeAll(keepCapacity: true)
         self.photoIDArray.removeAll(keepCapacity: true)
         self.commentIDArray.removeAll(keepCapacity: true)
         self.commentMessage.removeAll(keepCapacity: true)
@@ -97,18 +103,21 @@ class SearchResultsTableViewController: UITableViewController {
                                                                     print(error)
                                                                 } else if error == nil {
                                                                     
+                                                                    self.matchedCommentIDs.append(matchedCommentID)
+                                                                    
                                                                     if let commentMessage = result["message"]! {
-                                                                        
-                                                                        
-                                                                        
+                                                         
                                                                             self.commentMessage.append(commentMessage as! String)
-                                                                         
-                                                                        
-                                                                        
+                                                    
                                                                     }
                                                                     
                                                                     if let commentTime = result["created_time"] {
-                                                                        self.commentTime.append(commentTime as! String)
+                                                                        
+                                                                        self.df.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZ"
+                                                                        var date = self.df.dateFromString(commentTime as! String)
+                                                                        self.df.dateFormat = "eee MMM dd, yyyy hh:mm"
+                                                                        var dateStr = self.df.stringFromDate(date!)
+                                                                        self.commentTime.append(dateStr)
                                                                     }
                                                                     
                                                                     if let thePerson = result["from"] as? NSDictionary {
@@ -126,20 +135,25 @@ class SearchResultsTableViewController: UITableViewController {
                                                                                 
                                                                                 if let imageURLString = result["picture"] as? String {
                                                                                     
+                                                                                    
                                                                                     let imageURL = NSURL(string: imageURLString)
                                                                                     let data = NSData(contentsOfURL: imageURL!)
-                                                                                    self.commentObject.append(UIImage(data: data!)!)
-                                                                                    
-                                               
-                                                                
-                                                                                    
-                                                                                    
+                                                                                    let commentImage = UIImage(data: data!)
+                                                                                    self.commentObject.append(commentImage!)
+                                                                                    dispatch_async(dispatch_get_main_queue()) {
+                                                                                        () -> Void in
+                                                                                        self.tableView.reloadData()
+                                                                                        
+                                                                                    }
+                                                              
                                                                                 }
                                                                             }
                                                                         }
                                         
-                                                                    
+                                                                        
                                                                     }
+                                                                    
+                                                                    
                                                                    
                                                                     
                                                                 }
@@ -181,7 +195,7 @@ class SearchResultsTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return commentMessage.count
+        return self.commentMessage.count
     }
     
     
@@ -189,20 +203,31 @@ class SearchResultsTableViewController: UITableViewController {
         let myCell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as! Cell
         
         
-        myCell.commentUserLabel.text = commentMessage[indexPath.row]
+        myCell.messageThatMatched.text = self.commentMessage[indexPath.row]
+        myCell.dateForComment.text = self.commentTime[indexPath.row]
+        myCell.userThatCommented.text = self.commentFrom[indexPath.row]
+        myCell.imageCommented.image = self.commentObject[indexPath.row]
         
         
         return myCell
     }
     
-    func getCommentsFromResult(coms: [String]) -> [String] {
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        var safariAlert = UIAlertController(title: "Open Safari?", message: "Would you like to open Facebook in Safari?", preferredStyle: .Alert)
+        safariAlert.addAction(UIAlertAction(title: "Yes", style: .Default, handler: { (action: UIAlertAction) -> Void in
+            var urlString = "https://www.facebook.com/\(self.matchedCommentIDs[indexPath.row])"
+            var url = NSURL(string: urlString)
+            UIApplication.sharedApplication().openURL(url!)
+        }))
         
-        let finalcoms = coms
-        return finalcoms
+        safariAlert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: { (UIAlertAction) -> Void in
+            return
+        }))
+        
+        presentViewController(safariAlert, animated: true, completion: nil)
+        
     }
-    
-    
-    
+ 
     /*
      // Override to support conditional editing of the table view.
      override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {

@@ -9,6 +9,7 @@
 import UIKit
 import FBSDKLoginKit
 import FBSDKCoreKit
+import pop
 
 class ViewController: UIViewController, UIGestureRecognizerDelegate {
 
@@ -17,10 +18,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     var groupNames = [""]
     var groupDict = [String: UIButton]()
     var currentGroupID = ""
-    var fromDate = String()
-    var toDate = String()
-    var dateFormatter = NSDateFormatter()
     
+    var animEngine: AnimationEngine!
     
     @available(iOS 8.0, *)
     func displayAlert(title messageTitle: String, message alertMessage: String) {
@@ -29,24 +28,12 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
+    @IBOutlet weak var searchTFConst1: NSLayoutConstraint!
+    @IBOutlet weak var welcomeLabelConst: NSLayoutConstraint!
     
+    @IBOutlet weak var groupsLabelConst: NSLayoutConstraint!
 
-    @IBAction func toDateChanged(sender: AnyObject) {
-        
-        dateFormatter.dateFormat = "dd-MM-yyyy"
-        toDate = dateFormatter.stringFromDate(toDatePicker.date)
-        print(toDate)
-    }
-    @IBAction func fromDateChanged(sender: AnyObject) {
-        dateFormatter.dateFormat = "dd-MM-yyyy"
-        fromDate = dateFormatter.stringFromDate(fromDatePicker.date)
-        print(fromDate)
-    }
-    
-    @IBOutlet weak var toDatePicker: UIDatePicker!
-    @IBOutlet weak var toLabel: UILabel!
-    @IBOutlet weak var fromDatePicker: UIDatePicker!
-    @IBOutlet weak var fromLabel: UILabel!
+    @IBOutlet weak var searchTFConst: NSLayoutConstraint!
     @IBOutlet weak var welcome: UILabel!
     @IBOutlet weak var groupsStack: UIStackView!
     @IBOutlet weak var groupsLabel: UILabel!
@@ -65,22 +52,13 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+            self.animEngine = AnimationEngine(constraints: [welcomeLabelConst, searchTFConst, groupsLabelConst])
         
             groupsLabel.hidden = true
             groupsStack.hidden = true
             phraseLabel.hidden = true
             searchTF.hidden = true
             searchLabel.hidden = true
-            toLabel.hidden = true
-            toDatePicker.hidden = true
-            fromLabel.hidden = true
-            fromDatePicker.hidden = true
-        
-            dateFormatter.dateFormat = "dd-MM-yyyy"
-            toDate = dateFormatter.stringFromDate(toDatePicker.date)
-            fromDate = dateFormatter.stringFromDate(fromDatePicker.date)
-        
-        
             loginView.center = self.view.center
             loginView.readPermissions = ["public_profile", "user_friends", "user_photos", "user_managed_groups"]
             self.view.addSubview(loginView)
@@ -190,15 +168,12 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     override func viewDidAppear(animated: Bool) {
         if (FBSDKAccessToken.currentAccessToken() != nil)
         {
+            self.animEngine.animateOnScreen(1)
             groupsLabel.hidden = false
             groupsStack.hidden = false
             phraseLabel.hidden = false
             searchTF.hidden = false
             searchLabel.hidden = false
-            toLabel.hidden = false
-            toDatePicker.hidden = false
-            fromLabel.hidden = false
-            fromDatePicker.hidden = false
             loginView.center = CGPoint(x: self.view.bounds.width / 2 , y: self.view.bounds.height - 50)
             
         }
@@ -207,9 +182,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
       if segue.identifier == "searchSegue" {
             
-            if let destination = segue.destinationViewController as? SearchResultsTableViewController {
-                destination.fromDate = fromDate
-                destination.toDate = toDate
+            if let NavCon = segue.destinationViewController as? UINavigationController {
+                let destination = NavCon.topViewController as! SearchResultsTableViewController
                 destination.searchTerm = searchTF.text!
                 destination.groupID = currentGroupID
                 

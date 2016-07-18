@@ -10,7 +10,13 @@ import UIKit
 
 class Cell: UITableViewCell {
 
-    @IBOutlet weak var commentUserLabel: UILabel!
+    
+    @IBOutlet weak var userThatCommented: UILabel!
+    @IBOutlet weak var imageCommented: UIImageView!
+  
+    @IBOutlet weak var messageThatMatched: UILabel!
+    
+    @IBOutlet weak var dateForComment: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
