@@ -18,6 +18,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     var groupNames = [""]
     var groupDict = [String: UIButton]()
     var currentGroupID = ""
+    var firstMatchOnly = true
     
     var animEngine: AnimationEngine!
     
@@ -27,13 +28,23 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         self.presentViewController(alert, animated: true, completion: nil)
     }
-    
-    @IBOutlet weak var searchTFConst1: NSLayoutConstraint!
-    @IBOutlet weak var welcomeLabelConst: NSLayoutConstraint!
-    
-    @IBOutlet weak var groupsLabelConst: NSLayoutConstraint!
 
-    @IBOutlet weak var searchTFConst: NSLayoutConstraint!
+    
+    
+    @IBOutlet weak var firstMatchLabelTopConst: NSLayoutConstraint!
+    @IBOutlet weak var searchTFTopConst: NSLayoutConstraint!
+    @IBOutlet weak var firstMatchSwitchConst: NSLayoutConstraint!
+    @IBOutlet weak var groupsCenterConst: NSLayoutConstraint!
+    @IBOutlet weak var welcomeCenterConst: NSLayoutConstraint!
+    @IBAction func firstMatchSwitchAction(sender: AnyObject) {
+        if firstMatchOnly == true {
+            firstMatchOnly = false
+        } else if firstMatchOnly == false {
+            firstMatchOnly = true
+        }
+    }
+    @IBOutlet weak var firstMatchSwitchOutlet: UISwitch!
+    @IBOutlet weak var firstMatchLabel: UILabel!
     @IBOutlet weak var welcome: UILabel!
     @IBOutlet weak var groupsStack: UIStackView!
     @IBOutlet weak var groupsLabel: UILabel!
@@ -52,8 +63,10 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-            self.animEngine = AnimationEngine(constraints: [welcomeLabelConst, searchTFConst, groupsLabelConst])
+            self.animEngine = AnimationEngine(constraints: [searchTFTopConst, groupsCenterConst, welcomeCenterConst, firstMatchSwitchConst, firstMatchLabelTopConst])
         
+            firstMatchSwitchOutlet.hidden = true
+            firstMatchLabel.hidden = true
             groupsLabel.hidden = true
             groupsStack.hidden = true
             phraseLabel.hidden = true
@@ -89,9 +102,12 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     if let itemName = item["name"]! {
                         
                         let button = UIButton(type: UIButtonType.RoundedRect)
+                        button.backgroundColor = UIColor(red: 0.816, green: 0.431, blue: 0.988, alpha: 1)
+                        button.layer.cornerRadius = 5.0
+                        button.tintColor = UIColor.blackColor()
                         button.setTitle(itemName as! String, forState: UIControlState.Normal)
-                        /*let view1 = UIView()
-                        view1.addSubview(button) */
+                        button.titleLabel?.font = UIFont(name: "Avenir Next Regular", size: 10.0)
+                        button.titleEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
                         self.groupDict[item["id"] as! String] = button
                         
                     }
@@ -126,11 +142,14 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     func buttonAction(recognizer: UITapGestureRecognizer) {
         
         let senderButton = recognizer.view as! UIButton
-        senderButton.backgroundColor = UIColor.blueColor()
+        
         
         for (id, btns) in self.groupDict {
             if senderButton.currentTitle == btns.currentTitle {
                 currentGroupID = id
+                btns.backgroundColor = UIColor(red: 0.443, green: 0.988, blue: 0.749, alpha: 1.0)
+            } else if senderButton.currentTitle != btns.currentTitle {
+                btns.backgroundColor = UIColor(red: 0.816, green: 0.431, blue: 0.988, alpha: 1)
             }
         }
     }
@@ -174,6 +193,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             phraseLabel.hidden = false
             searchTF.hidden = false
             searchLabel.hidden = false
+            firstMatchSwitchOutlet.hidden = false
+            firstMatchLabel.hidden = false
             loginView.center = CGPoint(x: self.view.bounds.width / 2 , y: self.view.bounds.height - 50)
             
         }
@@ -186,6 +207,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 let destination = NavCon.topViewController as! SearchResultsTableViewController
                 destination.searchTerm = searchTF.text!
                 destination.groupID = currentGroupID
+                destination.firstMatchOnly = firstMatchOnly
                 
             }
         }

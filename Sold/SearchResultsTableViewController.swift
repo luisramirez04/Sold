@@ -15,6 +15,7 @@ class SearchResultsTableViewController: UITableViewController {
 
     var searchTerm = String()
     var groupID = String()
+    var firstMatchOnly = Bool()
     var albumResultArray = []
     var albumIDArray = [""]
     var photoIDResultArray = []
@@ -31,6 +32,16 @@ class SearchResultsTableViewController: UITableViewController {
     var matchedCommentsDates = [""]
     var firstMatch = [""]
     var matchedCommentIDs = [""]
+    
+    @available(iOS 8.0, *)
+    func displayAlert(title messageTitle: String, message alertMessage: String) {
+        let alert = UIAlertController(title: messageTitle, message: alertMessage, preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: { (UIAlertAction) -> Void in
+            
+            self.performSegueWithIdentifier("backToSearchSegue", sender: self)
+        }))
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,7 +105,11 @@ class SearchResultsTableViewController: UITableViewController {
                                                     
                                                     if let comments = commentResult["message"] as? String {
                                                         
-                                                        if comments.containsString(self.searchTerm) {
+                                                        if comments.containsString(self.searchTerm) == false {
+                                                            self.displayAlert(title: "Error", message: "There was no match for your search term. Please try again.")
+                                                        }
+                                                        
+                                                         else if comments.containsString(self.searchTerm) {
                                                             
                                                             if let matchedCommentID = commentResult["id"] as? String {
                                                             
@@ -143,6 +158,7 @@ class SearchResultsTableViewController: UITableViewController {
                                                                                     dispatch_async(dispatch_get_main_queue()) {
                                                                                         () -> Void in
                                                                                         self.tableView.reloadData()
+                                                                                        
                                                                                         
                                                                                     }
                                                               
@@ -221,6 +237,7 @@ class SearchResultsTableViewController: UITableViewController {
         }))
         
         safariAlert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: { (UIAlertAction) -> Void in
+            
             return
         }))
         
