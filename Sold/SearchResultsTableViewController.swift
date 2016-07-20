@@ -106,7 +106,7 @@ class SearchResultsTableViewController: UITableViewController {
                                                     
                                                     if let comments = commentResult["message"] as? String {
                                                         
-                                                         if comments.containsString(self.searchTerm) {
+                                                         if comments.lowercaseString.containsString(self.searchTerm) {
                                                             
                                                             if self.firstMatchOnly == true {
                                                                 foundMatch = true
