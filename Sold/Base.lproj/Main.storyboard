@@ -216,12 +216,18 @@
                             <outlet property="delegate" destination="zyy-Pw-M4k" id="Nn9-8C-TYV"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="3Lt-Ed-hFb"/>
+                    <navigationItem key="navigationItem" id="3Lt-Ed-hFb">
+                        <barButtonItem key="leftBarButtonItem" title="Back" id="XaB-iZ-SOD">
+                            <connections>
+                                <segue destination="BYZ-38-t0r" kind="show" identifier="backToSearchSegue" id="bHa-vC-gZC"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tFR-nZ-PCL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1237.5" y="266.5"/>
+            <point key="canvasLocation" x="1093.5" y="266.5"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="dvG-Zb-Jow">

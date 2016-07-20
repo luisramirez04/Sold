@@ -95,21 +95,22 @@ class SearchResultsTableViewController: UITableViewController {
                                             if error != nil {
                                                 print(error)
                                             } else if error == nil {
-                                                
-                                                
-                                                
+  
                                                 self.commentsIDResultArray = result["data"] as! NSArray
                                                 
+                                                var foundMatch = false
                                                 
                                                 for commentResult in self.commentsIDResultArray { // loop through data items
                                                     
+                                                    if foundMatch == false {
+                                                    
                                                     if let comments = commentResult["message"] as? String {
                                                         
-                                                        if comments.containsString(self.searchTerm) == false {
-                                                            self.displayAlert(title: "Error", message: "There was no match for your search term. Please try again.")
-                                                        }
-                                                        
-                                                         else if comments.containsString(self.searchTerm) {
+                                                         if comments.containsString(self.searchTerm) {
+                                                            
+                                                            if self.firstMatchOnly == true {
+                                                                foundMatch = true
+                                                            }
                                                             
                                                             if let matchedCommentID = commentResult["id"] as? String {
                                                             
@@ -179,7 +180,7 @@ class SearchResultsTableViewController: UITableViewController {
                                                         }
                                                         
                                                     }
-                                                    
+                                                    }
                                                 }
                                                 
                                             }

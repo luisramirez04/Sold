@@ -63,6 +63,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.hidden = true
             self.animEngine = AnimationEngine(constraints: [searchTFTopConst, groupsCenterConst, welcomeCenterConst, firstMatchSwitchConst, firstMatchLabelTopConst])
         
             firstMatchSwitchOutlet.hidden = true
