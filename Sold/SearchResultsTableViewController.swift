@@ -10,6 +10,14 @@ import UIKit
 import FBSDKLoginKit
 import FBSDKCoreKit
 
+let yellow = UIColor(colorLiteralRed: 0.996, green: 0.831, blue: 0.149, alpha: 0.7)
+let orange = UIColor(colorLiteralRed: 1.000, green: 0.533, blue: 0.416, alpha: 0.7)
+let magenta = UIColor(colorLiteralRed: 1.000, green: 0.318, blue: 0.843, alpha: 0.7)
+let purple = UIColor(colorLiteralRed: 0.824, green: 0.424, blue: 0.996, alpha: 0.7)
+let blue = UIColor(colorLiteralRed: 0.573, green: 0.604, blue: 1.00, alpha: 0.7)
+let lightBlue = UIColor(colorLiteralRed: 0.576, green: 0.827, blue: 1.000, alpha: 0.7)
+let green = UIColor(colorLiteralRed: 0.439, green: 1.000, blue: 0.741, alpha: 0.7)
+
 class SearchResultsTableViewController: UITableViewController {
     
 
@@ -32,6 +40,9 @@ class SearchResultsTableViewController: UITableViewController {
     var matchedCommentsDates = [""]
     var firstMatch = [""]
     var matchedCommentIDs = [""]
+
+    let colors = [yellow, orange, magenta, purple, blue, lightBlue, green]
+    
     
     @available(iOS 8.0, *)
     func displayAlert(title messageTitle: String, message alertMessage: String) {
@@ -45,6 +56,8 @@ class SearchResultsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         
         self.title = searchTerm
 
@@ -180,12 +193,16 @@ class SearchResultsTableViewController: UITableViewController {
                                                         }
                                                         
                                                     }
+                                                        
                                                     }
                                                 }
                                                 
                                             }
+                                            
                                         }
+                                        
                                     }
+                                    
                                 }
                                 
                             }
@@ -219,7 +236,7 @@ class SearchResultsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let myCell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as! Cell
         
-        
+        myCell.backgroundColor = self.colors[indexPath.row % self.colors.count]
         myCell.messageThatMatched.text = self.commentMessage[indexPath.row]
         myCell.dateForComment.text = self.commentTime[indexPath.row]
         myCell.userThatCommented.text = self.commentFrom[indexPath.row]

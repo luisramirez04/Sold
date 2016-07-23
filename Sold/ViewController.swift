@@ -11,9 +11,9 @@ import FBSDKLoginKit
 import FBSDKCoreKit
 import pop
 
-class ViewController: UIViewController, UIGestureRecognizerDelegate {
+class ViewController: UIViewController, FBSDKLoginButtonDelegate, UIGestureRecognizerDelegate {
 
-    let loginView = FBSDKLoginButton()
+    var loginView = FBSDKLoginButton()
     var groupsArray = []
     var groupNames = [""]
     var groupDict = [String: UIButton]()
@@ -63,6 +63,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        loginView.delegate = self
         self.navigationController?.navigationBar.hidden = true
             self.animEngine = AnimationEngine(constraints: [searchTFTopConst, groupsCenterConst, welcomeCenterConst, firstMatchSwitchConst, firstMatchLabelTopConst])
         
@@ -154,27 +156,80 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             }
         }
     }
+    
+    func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
+        welcome.text = "Please login to continue"
+        firstMatchSwitchOutlet.hidden = true
+        firstMatchLabel.hidden = true
+        groupsLabel.hidden = true
+        groupsStack.hidden = true
+        phraseLabel.hidden = true
+        searchTF.hidden = true
+        searchLabel.hidden = true
+        loginView.center = self.view.center
+    }
+    
     func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
-        if ((error) != nil) {
-            // Process error
+        if error != nil {
+            
         }
         else if result.isCancelled {
             // Handle cancellations
         }
-        else {
+        else if error == nil {
             
+            FBSDKGraphRequest.init(graphPath: "me/groups", parameters: ["fields":"name"]).startWithCompletionHandler { (connection, result, error) -> Void in
+                if error != nil {
+                    print(error)
+                } else if error == nil {
+                    
+                    self.groupNames.removeAll(keepCapacity: true)
+                    
+                    self.groupsArray = result["data"] as! NSArray
+                    
+                    for item in self.groupsArray { // loop through data items
+                        
+                        if let itemName = item["name"]! {
+                            
+                            let button = UIButton(type: UIButtonType.RoundedRect)
+                            button.backgroundColor = UIColor(red: 0.816, green: 0.431, blue: 0.988, alpha: 1)
+                            button.layer.cornerRadius = 5.0
+                            button.tintColor = UIColor.blackColor()
+                            button.setTitle(itemName as! String, forState: UIControlState.Normal)
+                            button.titleLabel?.font = UIFont(name: "Avenir Next Regular", size: 10.0)
+                            button.titleEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
+                            self.groupDict[item["id"] as! String] = button
+                            
+                        }
+                        
+                    }
+                    
+                    for (ids, buttons) in self.groupDict {
+                        
+                        self.groupsStack.userInteractionEnabled = true
+                        self.groupsStack.exclusiveTouch = true
+                        self.groupsStack.addArrangedSubview(buttons)
+                        let recognizer = UITapGestureRecognizer(target: self, action: #selector(self.buttonAction))
+                        recognizer.delegate = self
+                        buttons.addGestureRecognizer(recognizer)
+                    }
+                    
+                    
+                }
+                
+                
+            }
             FBSDKGraphRequest.init(graphPath: "me", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
                 if error != nil {
                     print(error)
                 } else if error == nil {
                     
-                    let userName = result["first_name"] as! String
+                    let userName = result["name"] as! String
                     self.welcome.text = "Welcome \(userName)"
                     
                 }
                 
             }
-            
         }
         
     }
@@ -189,6 +244,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         if (FBSDKAccessToken.currentAccessToken() != nil)
         {
             self.animEngine.animateOnScreen(1)
+            welcome.hidden = false
             groupsLabel.hidden = false
             groupsStack.hidden = false
             phraseLabel.hidden = false
