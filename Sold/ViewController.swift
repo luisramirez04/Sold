@@ -79,59 +79,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UIGestureRecog
             loginView.readPermissions = ["public_profile", "user_friends", "user_photos", "user_managed_groups"]
             self.view.addSubview(loginView)
         
-        FBSDKGraphRequest.init(graphPath: "me", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
-            if error != nil {
-                print(error)
-            } else if error == nil {
-                
-                let userName = result["name"] as! String
-                self.welcome.text = "Welcome \(userName)"
-                
-            }
-            
-        }
         
-        FBSDKGraphRequest.init(graphPath: "me/groups", parameters: ["fields":"name"]).startWithCompletionHandler { (connection, result, error) -> Void in
-            if error != nil {
-                print(error)
-            } else if error == nil {
-                
-                self.groupNames.removeAll(keepCapacity: true)
-                
-                self.groupsArray = result["data"] as! NSArray
-                
-                for item in self.groupsArray { // loop through data items
-                    
-                    if let itemName = item["name"]! {
-                        
-                        let button = UIButton(type: UIButtonType.RoundedRect)
-                        button.backgroundColor = UIColor(red: 0.816, green: 0.431, blue: 0.988, alpha: 1)
-                        button.layer.cornerRadius = 5.0
-                        button.tintColor = UIColor.blackColor()
-                        button.setTitle(itemName as! String, forState: UIControlState.Normal)
-                        button.titleLabel?.font = UIFont(name: "Avenir Next Regular", size: 10.0)
-                        button.titleEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
-                        self.groupDict[item["id"] as! String] = button
-                        
-                    }
-                    
-                }
-                
-                for (ids, buttons) in self.groupDict {
-                    
-                    self.groupsStack.userInteractionEnabled = true
-                    self.groupsStack.exclusiveTouch = true
-                    self.groupsStack.addArrangedSubview(buttons)
-                    let recognizer = UITapGestureRecognizer(target: self, action: #selector(self.buttonAction))
-                    recognizer.delegate = self
-                    buttons.addGestureRecognizer(recognizer)
-                }
-                
-                
-            }
-            
-            
-        }
         
         
         
@@ -178,12 +126,50 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UIGestureRecog
         }
         else if error == nil {
             
+        }
+    }
+    
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        if (FBSDKAccessToken.currentAccessToken() != nil)
+        {
+            
+            self.animEngine.animateOnScreen(1)
+            welcome.hidden = false
+            groupsLabel.hidden = false
+            groupsStack.hidden = false
+            phraseLabel.hidden = false
+            searchTF.hidden = false
+            searchLabel.hidden = false
+            firstMatchSwitchOutlet.hidden = false
+            firstMatchLabel.hidden = false
+            loginView.center = CGPoint(x: self.view.bounds.width / 2 , y: self.view.bounds.height - 50)
+            
+            FBSDKGraphRequest.init(graphPath: "me", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
+                if error != nil {
+                    print(error)
+                } else if error == nil {
+                    
+                    let userName = result["name"] as! String
+                    self.welcome.text = "Welcome \(userName)"
+                    
+                }
+                
+            }
+            
             FBSDKGraphRequest.init(graphPath: "me/groups", parameters: ["fields":"name"]).startWithCompletionHandler { (connection, result, error) -> Void in
                 if error != nil {
                     print(error)
                 } else if error == nil {
                     
                     self.groupNames.removeAll(keepCapacity: true)
+                    
+                    if self.groupsArray.count == 0 {
                     
                     self.groupsArray = result["data"] as! NSArray
                     
@@ -205,7 +191,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UIGestureRecog
                     }
                     
                     for (ids, buttons) in self.groupDict {
-                        
+             
                         self.groupsStack.userInteractionEnabled = true
                         self.groupsStack.exclusiveTouch = true
                         self.groupsStack.addArrangedSubview(buttons)
@@ -213,46 +199,12 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UIGestureRecog
                         recognizer.delegate = self
                         buttons.addGestureRecognizer(recognizer)
                     }
-                    
+                    }
                     
                 }
                 
                 
             }
-            FBSDKGraphRequest.init(graphPath: "me", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
-                if error != nil {
-                    print(error)
-                } else if error == nil {
-                    
-                    let userName = result["name"] as! String
-                    self.welcome.text = "Welcome \(userName)"
-                    
-                }
-                
-            }
-        }
-        
-    }
-    
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        if (FBSDKAccessToken.currentAccessToken() != nil)
-        {
-            self.animEngine.animateOnScreen(1)
-            welcome.hidden = false
-            groupsLabel.hidden = false
-            groupsStack.hidden = false
-            phraseLabel.hidden = false
-            searchTF.hidden = false
-            searchLabel.hidden = false
-            firstMatchSwitchOutlet.hidden = false
-            firstMatchLabel.hidden = false
-            loginView.center = CGPoint(x: self.view.bounds.width / 2 , y: self.view.bounds.height - 50)
             
         }
     }
