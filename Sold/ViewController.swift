@@ -11,12 +11,13 @@ import FBSDKLoginKit
 import FBSDKCoreKit
 import pop
 
-class ViewController: UIViewController, FBSDKLoginButtonDelegate, UIGestureRecognizerDelegate {
+class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITableViewDelegate, UITableViewDataSource {
 
+    @IBOutlet weak var groupsTableView: UITableView!
     var loginView = FBSDKLoginButton()
     var groupsArray = []
     var groupNames = [""]
-    var groupDict = [String: UIButton]()
+    var groupIDs = [""]
     var currentGroupID = ""
     var firstMatchOnly = true
     
@@ -31,6 +32,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UIGestureRecog
 
     
     
+    @IBOutlet weak var tableConst: NSLayoutConstraint!
     @IBOutlet weak var firstMatchLabelTopConst: NSLayoutConstraint!
     @IBOutlet weak var searchTFTopConst: NSLayoutConstraint!
     @IBOutlet weak var firstMatchSwitchConst: NSLayoutConstraint!
@@ -46,7 +48,6 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UIGestureRecog
     @IBOutlet weak var firstMatchSwitchOutlet: UISwitch!
     @IBOutlet weak var firstMatchLabel: UILabel!
     @IBOutlet weak var welcome: UILabel!
-    @IBOutlet weak var groupsStack: UIStackView!
     @IBOutlet weak var groupsLabel: UILabel!
     @IBOutlet weak var phraseLabel: UILabel!
     @IBOutlet weak var searchTF: UITextField!
@@ -64,14 +65,17 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UIGestureRecog
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        groupsTableView.delegate = self
+        groupsTableView.dataSource = self
+        
         loginView.delegate = self
         self.navigationController?.navigationBar.hidden = true
-            self.animEngine = AnimationEngine(constraints: [searchTFTopConst, groupsCenterConst, welcomeCenterConst, firstMatchSwitchConst, firstMatchLabelTopConst])
+            self.animEngine = AnimationEngine(constraints: [searchTFTopConst, groupsCenterConst, welcomeCenterConst, firstMatchSwitchConst, firstMatchLabelTopConst, tableConst])
         
             firstMatchSwitchOutlet.hidden = true
             firstMatchLabel.hidden = true
             groupsLabel.hidden = true
-            groupsStack.hidden = true
+            groupsTableView.hidden = true
             phraseLabel.hidden = true
             searchTF.hidden = true
             searchLabel.hidden = true
@@ -88,21 +92,42 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UIGestureRecog
         // Do any additional setup after loading the view, typically from a nib.
     }
     
-
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
+    }
     
-    func buttonAction(recognizer: UITapGestureRecognizer) {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return groupNames.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
         
-        let senderButton = recognizer.view as! UIButton
+        let row = indexPath.row
+        cell.textLabel?.text = groupNames[row]
+        let backgroundView = UIView()
+        backgroundView.backgroundColor = UIColor.redColor()
+        cell.selectedBackgroundView = backgroundView
         
+        /*if cell.selected {
+            cell.contentView.backgroundColor = UIColor(colorLiteralRed: 0.996, green: 0.831, blue: 0.149, alpha: 0.7)
+            cell.accessoryView?.backgroundColor = UIColor(colorLiteralRed: 0.996, green: 0.831, blue: 0.149, alpha: 0.7)
+        }else{
+            cell.backgroundColor = UIColor(colorLiteralRed: 1.000, green: 0.533, blue: 0.416, alpha: 0.7)
+            cell.textLabel?.textColor = UIColor.blackColor()
+        } */
         
-        for (id, btns) in self.groupDict {
-            if senderButton.currentTitle == btns.currentTitle {
-                currentGroupID = id
-                btns.backgroundColor = UIColor(red: 0.443, green: 0.988, blue: 0.749, alpha: 1.0)
-            } else if senderButton.currentTitle != btns.currentTitle {
-                btns.backgroundColor = UIColor(red: 0.816, green: 0.431, blue: 0.988, alpha: 1)
-            }
-        }
+        return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+   
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+    
+        let row = indexPath.row
+        currentGroupID = groupIDs[row]
+        
     }
     
     func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
@@ -110,7 +135,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UIGestureRecog
         firstMatchSwitchOutlet.hidden = true
         firstMatchLabel.hidden = true
         groupsLabel.hidden = true
-        groupsStack.hidden = true
+        groupsTableView.hidden = true
         phraseLabel.hidden = true
         searchTF.hidden = true
         searchLabel.hidden = true
@@ -142,7 +167,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UIGestureRecog
             self.animEngine.animateOnScreen(1)
             welcome.hidden = false
             groupsLabel.hidden = false
-            groupsStack.hidden = false
+            groupsTableView.hidden = false
             phraseLabel.hidden = false
             searchTF.hidden = false
             searchLabel.hidden = false
@@ -168,6 +193,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UIGestureRecog
                 } else if error == nil {
                     
                     self.groupNames.removeAll(keepCapacity: true)
+                    self.groupIDs.removeAll(keepCapacity: true)
                     
                     if self.groupsArray.count == 0 {
                     
@@ -176,29 +202,15 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UIGestureRecog
                     for item in self.groupsArray { // loop through data items
                         
                         if let itemName = item["name"]! {
-                            
-                            let button = UIButton(type: UIButtonType.RoundedRect)
-                            button.backgroundColor = UIColor(red: 0.816, green: 0.431, blue: 0.988, alpha: 1)
-                            button.layer.cornerRadius = 5.0
-                            button.tintColor = UIColor.blackColor()
-                            button.setTitle(itemName as! String, forState: UIControlState.Normal)
-                            button.titleLabel?.font = UIFont(name: "Avenir Next Regular", size: 10.0)
-                            button.titleEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
-                            self.groupDict[item["id"] as! String] = button
+
+                            self.groupNames.append(itemName as! String)
+                            self.groupIDs.append(item["id"] as! String)
+                            self.groupsTableView.reloadData()   
                             
                         }
                         
                     }
                     
-                    for (ids, buttons) in self.groupDict {
-             
-                        self.groupsStack.userInteractionEnabled = true
-                        self.groupsStack.exclusiveTouch = true
-                        self.groupsStack.addArrangedSubview(buttons)
-                        let recognizer = UITapGestureRecognizer(target: self, action: #selector(self.buttonAction))
-                        recognizer.delegate = self
-                        buttons.addGestureRecognizer(recognizer)
-                    }
                     }
                     
                 }
