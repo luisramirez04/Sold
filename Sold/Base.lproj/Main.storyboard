@@ -125,16 +125,24 @@
                                             </tableViewCell>
                                         </prototypes>
                                     </tableView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YWa-r6-tr5">
+                                        <rect key="frame" x="333" y="107" width="22" height="22"/>
+                                        <connections>
+                                            <segue destination="beS-zF-y1h" kind="show" identifier="moreInfoSegue" id="rWs-Uc-gUg"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="mx5-rw-sVH" firstAttribute="centerX" secondItem="hfv-yM-5MX" secondAttribute="centerX" id="3A4-2D-h3b"/>
                                     <constraint firstItem="wgM-sw-Lw5" firstAttribute="top" secondItem="mx5-rw-sVH" secondAttribute="bottom" constant="18" id="9TR-Dt-g8a"/>
+                                    <constraint firstAttribute="trailing" secondItem="YWa-r6-tr5" secondAttribute="trailing" constant="20" id="B4c-vZ-xQ8"/>
                                     <constraint firstItem="8G5-qs-hO2" firstAttribute="top" secondItem="OX0-St-T5M" secondAttribute="bottom" constant="8" id="DdQ-Dy-EKF"/>
                                     <constraint firstItem="D37-97-rCO" firstAttribute="top" secondItem="8G5-qs-hO2" secondAttribute="bottom" constant="17" id="FEH-tI-9nu"/>
                                     <constraint firstItem="mx5-rw-sVH" firstAttribute="top" secondItem="hfv-yM-5MX" secondAttribute="top" constant="39" id="GX0-fD-gof"/>
                                     <constraint firstItem="HWl-MK-uVb" firstAttribute="top" secondItem="rJi-cN-q8T" secondAttribute="bottom" constant="33" id="HmF-Zq-GVR"/>
                                     <constraint firstItem="OX0-St-T5M" firstAttribute="top" secondItem="wgM-sw-Lw5" secondAttribute="bottom" constant="8" id="JMO-mT-SKB"/>
+                                    <constraint firstItem="YWa-r6-tr5" firstAttribute="top" secondItem="mx5-rw-sVH" secondAttribute="bottom" constant="17" id="JtR-42-RwQ"/>
                                     <constraint firstItem="rJi-cN-q8T" firstAttribute="top" secondItem="ePu-iN-EBc" secondAttribute="bottom" constant="23" id="RId-xs-HUN"/>
                                     <constraint firstItem="ePu-iN-EBc" firstAttribute="centerX" secondItem="hfv-yM-5MX" secondAttribute="centerX" id="UyZ-qz-0Bn"/>
                                     <constraint firstItem="HWl-MK-uVb" firstAttribute="centerX" secondItem="hfv-yM-5MX" secondAttribute="centerX" id="Xy6-NO-K91"/>
@@ -280,5 +288,54 @@
             </objects>
             <point key="canvasLocation" x="650.5" y="266.5"/>
         </scene>
+        <!--More Info View Controller-->
+        <scene sceneID="jft-BC-1g3">
+            <objects>
+                <viewController id="beS-zF-y1h" customClass="MoreInfoViewController" customModule="Sold" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="WJt-4I-BBu"/>
+                        <viewControllerLayoutGuide type="bottom" id="2kf-d9-jb1"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="VPN-5B-2lT">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="20" baselineAdjustment="alignBaselines" highlighted="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E3e-cg-P5K">
+                                <rect key="frame" x="20" y="66" width="335" height="581"/>
+                                <mutableString key="text">This application will match your Facebook group's comments with a search term of your choice. To begin, log in to Facebook and allow the requested permissions. Once you return back to the app, select the group you want to search in. Then type a term that you want to search for. By default, the app will only search for the first match. If you would like to turn this feature off, hit the switch. Once this is done, hit the search button! Once the comments load, you may click on the row of your choice to open the comment in Facebook in Safari. </mutableString>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="20"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <navigationBar contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="96r-TX-swe">
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <items>
+                                    <navigationItem title="How it works" id="jAq-Sh-7Kt">
+                                        <barButtonItem key="leftBarButtonItem" title="Back" style="plain" id="7LD-gH-bav">
+                                            <connections>
+                                                <segue destination="BYZ-38-t0r" kind="show" identifier="backToSearchSegue" id="0FM-tG-V6A"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="96r-TX-swe" firstAttribute="leading" secondItem="VPN-5B-2lT" secondAttribute="leadingMargin" constant="-20" id="PCx-oq-OgI"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="96r-TX-swe" secondAttribute="trailing" constant="-20" id="qc3-tY-yqH"/>
+                            <constraint firstItem="96r-TX-swe" firstAttribute="top" secondItem="WJt-4I-BBu" secondAttribute="bottom" id="x7S-4Y-c0G"/>
+                        </constraints>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="76z-1G-1kg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="650.5" y="984.5"/>
+        </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="0FM-tG-V6A"/>
+    </inferredMetricsTieBreakers>
 </document>

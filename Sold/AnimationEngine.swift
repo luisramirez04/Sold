@@ -45,7 +45,7 @@ class AnimationEngine {
             repeat {
                 let moveAnim = POPSpringAnimation(propertyNamed: kPOPLayoutConstraintConstant)
                 moveAnim.toValue = self.originalConstants[index]
-                moveAnim.springBounciness = 12
+                moveAnim.springBounciness = 15
                 moveAnim.springSpeed = 12
                 
                 if (index > 0) {
@@ -55,7 +55,7 @@ class AnimationEngine {
                 let con = self.constraints[index]
                 con.pop_addAnimation(moveAnim, forKey: "moveOnScreen")
                 
-                index++
+                index += 1
                 
             } while (index < self.constraints.count)
         }
@@ -66,7 +66,7 @@ class AnimationEngine {
     class func animateToPosition(view: UIView, position: CGPoint, completion: ((POPAnimation!, Bool) -> Void)) {
         let moveAnim = POPSpringAnimation(propertyNamed: kPOPLayerPosition)
         moveAnim.toValue = NSValue(CGPoint: position)
-        moveAnim.springBounciness = 8
+        moveAnim.springBounciness = 12
         moveAnim.springSpeed = 8
         moveAnim.completionBlock = completion
         view.pop_addAnimation(moveAnim, forKey: "moveToPosition")

@@ -11,7 +11,7 @@ import FBSDKLoginKit
 import FBSDKCoreKit
 import pop
 
-class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var groupsTableView: UITableView!
     var loginView = FBSDKLoginButton()
@@ -68,6 +68,9 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITableViewDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.dismissKeyboard))
+        view.addGestureRecognizer(tap)
+        
         groupsTableView.delegate = self
         groupsTableView.dataSource = self
         
@@ -97,6 +100,11 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITableViewDel
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
+    }
+    
+    func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -216,6 +224,11 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITableViewDel
             }
             
         }
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
