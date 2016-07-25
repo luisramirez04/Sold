@@ -23,6 +23,14 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITableViewDel
     
     var animEngine: AnimationEngine!
     
+    @IBOutlet weak var searchButtonCenterXConst: NSLayoutConstraint!
+    @IBOutlet weak var firstMatchSwitchCenterXConst: NSLayoutConstraint!
+    @IBOutlet weak var FirstMatchOnlyCenterXConst: NSLayoutConstraint!
+    @IBOutlet weak var SearchTFCenterXConst: NSLayoutConstraint!
+    @IBOutlet weak var PhraseLabelCenterXConst: NSLayoutConstraint!
+    @IBOutlet weak var groupsLabelCenterXConst: NSLayoutConstraint!
+    @IBOutlet weak var groupsTableCenterXConst: NSLayoutConstraint!
+    @IBOutlet weak var welcomeCenterXConst: NSLayoutConstraint!
     @available(iOS 8.0, *)
     func displayAlert(title messageTitle: String, message alertMessage: String) {
         let alert = UIAlertController(title: messageTitle, message: alertMessage, preferredStyle: UIAlertControllerStyle.Alert)
@@ -32,12 +40,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITableViewDel
 
     
     
-    @IBOutlet weak var tableConst: NSLayoutConstraint!
-    @IBOutlet weak var firstMatchLabelTopConst: NSLayoutConstraint!
-    @IBOutlet weak var searchTFTopConst: NSLayoutConstraint!
-    @IBOutlet weak var firstMatchSwitchConst: NSLayoutConstraint!
-    @IBOutlet weak var groupsCenterConst: NSLayoutConstraint!
-    @IBOutlet weak var welcomeCenterConst: NSLayoutConstraint!
+
     @IBAction func firstMatchSwitchAction(sender: AnyObject) {
         if firstMatchOnly == true {
             firstMatchOnly = false
@@ -70,7 +73,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITableViewDel
         
         loginView.delegate = self
         self.navigationController?.navigationBar.hidden = true
-            self.animEngine = AnimationEngine(constraints: [searchTFTopConst, groupsCenterConst, welcomeCenterConst, firstMatchSwitchConst, firstMatchLabelTopConst, tableConst])
+            self.animEngine = AnimationEngine(constraints: [welcomeCenterXConst, SearchTFCenterXConst, groupsLabelCenterXConst, groupsTableCenterXConst, PhraseLabelCenterXConst, searchButtonCenterXConst, FirstMatchOnlyCenterXConst, firstMatchSwitchCenterXConst])
         
             firstMatchSwitchOutlet.hidden = true
             firstMatchLabel.hidden = true
@@ -105,24 +108,18 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITableViewDel
         
         let row = indexPath.row
         cell.textLabel?.text = groupNames[row]
+        cell.textLabel?.font = UIFont(name:"Avenir", size:16)
         let backgroundView = UIView()
-        backgroundView.backgroundColor = UIColor.redColor()
+        backgroundView.backgroundColor = UIColor(colorLiteralRed: 0.996, green: 0.831, blue: 0.149, alpha: 0.7)
         cell.selectedBackgroundView = backgroundView
-        
-        /*if cell.selected {
-            cell.contentView.backgroundColor = UIColor(colorLiteralRed: 0.996, green: 0.831, blue: 0.149, alpha: 0.7)
-            cell.accessoryView?.backgroundColor = UIColor(colorLiteralRed: 0.996, green: 0.831, blue: 0.149, alpha: 0.7)
-        }else{
-            cell.backgroundColor = UIColor(colorLiteralRed: 1.000, green: 0.533, blue: 0.416, alpha: 0.7)
-            cell.textLabel?.textColor = UIColor.blackColor()
-        } */
+
         
         return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
    
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+
         
     
         let row = indexPath.row
