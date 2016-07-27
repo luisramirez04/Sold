@@ -13,6 +13,7 @@ import pop
 
 class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
 
+    @IBOutlet weak var firstLabel: UILabel!
     @IBOutlet weak var groupsTableView: UITableView!
     var loginView = FBSDKLoginButton()
     var groupsArray = []
@@ -38,9 +39,6 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
         self.presentViewController(alert, animated: true, completion: nil)
     }
 
-    
-    
-
     @IBAction func firstMatchSwitchAction(sender: AnyObject) {
         if firstMatchOnly == true {
             firstMatchOnly = false
@@ -48,6 +46,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
             firstMatchOnly = true
         }
     }
+    
     @IBOutlet weak var firstMatchSwitchOutlet: UISwitch!
     @IBOutlet weak var firstMatchLabel: UILabel!
     @IBOutlet weak var welcome: UILabel!
@@ -68,16 +67,14 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.dismissKeyboard))
-        view.addGestureRecognizer(tap)
-        
+        searchTF.delegate = self
         groupsTableView.delegate = self
         groupsTableView.dataSource = self
         
         loginView.delegate = self
         self.navigationController?.navigationBar.hidden = true
             self.animEngine = AnimationEngine(constraints: [welcomeCenterXConst, SearchTFCenterXConst, groupsLabelCenterXConst, groupsTableCenterXConst, PhraseLabelCenterXConst, searchButtonCenterXConst, FirstMatchOnlyCenterXConst, firstMatchSwitchCenterXConst])
-        
+
             firstMatchSwitchOutlet.hidden = true
             firstMatchLabel.hidden = true
             groupsLabel.hidden = true
@@ -86,25 +83,14 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
             searchTF.hidden = true
             searchLabel.hidden = true
             loginView.center = self.view.center
-            loginView.readPermissions = ["public_profile", "user_friends", "user_photos", "user_managed_groups"]
+            loginView.readPermissions = ["public_profile", "user_managed_groups"]
+        
             self.view.addSubview(loginView)
-        
-        
-        
-        
-        
-        
-        
-        // Do any additional setup after loading the view, typically from a nib.
+
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
-    }
-    
-    func dismissKeyboard() {
-        //Causes the view (or one of its embedded text fields) to resign the first responder status.
-        view.endEditing(true)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -126,10 +112,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-   
 
-        
-    
         let row = indexPath.row
         currentGroupID = groupIDs[row]
         
@@ -137,6 +120,8 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
     
     func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
         welcome.text = "Please login to continue"
+        //firstView.hidden = true
+        firstLabel.hidden = true
         firstMatchSwitchOutlet.hidden = true
         firstMatchLabel.hidden = true
         groupsLabel.hidden = true
@@ -152,10 +137,12 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
             
         }
         else if result.isCancelled {
-            // Handle cancellations
+            displayAlert(title: "!", message: "Please log in through facebook and grant us your groups permission. Without this, the application cannot see your groups and cannot work. This application does not post anything, anywhere")
         }
         else if error == nil {
-            
+            if result.declinedPermissions != nil {
+                displayAlert(title: "Whoops", message: "Without granting us permission to see your groups, this application cannot run. This application does not post anything, anywhere")
+            }
         }
     }
     
@@ -166,11 +153,12 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
     }
     
     override func viewDidAppear(animated: Bool) {
-        if (FBSDKAccessToken.currentAccessToken() != nil)
+        if FBSDKAccessToken.currentAccessToken() != nil
         {
             
             self.animEngine.animateOnScreen(1)
-            welcome.hidden = false
+            //firstView.hidden = true
+            firstLabel.hidden = true
             groupsLabel.hidden = false
             groupsTableView.hidden = false
             phraseLabel.hidden = false
@@ -227,8 +215,8 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        self.view.endEditing(true)
-        return false
+        textField.resignFirstResponder()
+        return true
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -236,7 +224,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
             
             if let NavCon = segue.destinationViewController as? UINavigationController {
                 let destination = NavCon.topViewController as! SearchResultsTableViewController
-                destination.searchTerm = searchTF.text!
+                destination.searchTerm = (searchTF.text?.lowercaseString)!
                 destination.groupID = currentGroupID
                 destination.firstMatchOnly = firstMatchOnly
                 

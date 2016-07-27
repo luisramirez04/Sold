@@ -125,18 +125,26 @@
                                             </tableViewCell>
                                         </prototypes>
                                     </tableView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YWa-r6-tr5">
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YWa-r6-tr5">
                                         <rect key="frame" x="333" y="107" width="22" height="22"/>
                                         <connections>
                                             <segue destination="beS-zF-y1h" kind="show" identifier="moreInfoSegue" id="rWs-Uc-gUg"/>
                                         </connections>
                                     </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5vH-hx-Tsg">
+                                        <rect key="frame" x="20" y="39" width="305" height="163"/>
+                                        <string key="text">Welcome! Please log in through Facebook to continue. Click on the button to the right to learn more information about the application!</string>
+                                        <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="20"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="mx5-rw-sVH" firstAttribute="centerX" secondItem="hfv-yM-5MX" secondAttribute="centerX" id="3A4-2D-h3b"/>
                                     <constraint firstItem="wgM-sw-Lw5" firstAttribute="top" secondItem="mx5-rw-sVH" secondAttribute="bottom" constant="18" id="9TR-Dt-g8a"/>
                                     <constraint firstAttribute="trailing" secondItem="YWa-r6-tr5" secondAttribute="trailing" constant="20" id="B4c-vZ-xQ8"/>
+                                    <constraint firstItem="5vH-hx-Tsg" firstAttribute="leading" secondItem="hfv-yM-5MX" secondAttribute="leading" constant="20" id="BIb-Qd-Z6Z"/>
                                     <constraint firstItem="8G5-qs-hO2" firstAttribute="top" secondItem="OX0-St-T5M" secondAttribute="bottom" constant="8" id="DdQ-Dy-EKF"/>
                                     <constraint firstItem="D37-97-rCO" firstAttribute="top" secondItem="8G5-qs-hO2" secondAttribute="bottom" constant="17" id="FEH-tI-9nu"/>
                                     <constraint firstItem="mx5-rw-sVH" firstAttribute="top" secondItem="hfv-yM-5MX" secondAttribute="top" constant="39" id="GX0-fD-gof"/>
@@ -150,8 +158,10 @@
                                     <constraint firstItem="ePu-iN-EBc" firstAttribute="top" secondItem="D37-97-rCO" secondAttribute="bottom" constant="18" id="lmr-I1-pjD"/>
                                     <constraint firstItem="wgM-sw-Lw5" firstAttribute="centerX" secondItem="hfv-yM-5MX" secondAttribute="centerX" id="mHg-tt-83V"/>
                                     <constraint firstItem="OX0-St-T5M" firstAttribute="centerX" secondItem="hfv-yM-5MX" secondAttribute="centerX" id="mjR-fo-FPh"/>
+                                    <constraint firstItem="YWa-r6-tr5" firstAttribute="leading" secondItem="5vH-hx-Tsg" secondAttribute="trailing" constant="8" id="q5Q-a3-jYI"/>
                                     <constraint firstItem="8G5-qs-hO2" firstAttribute="centerX" secondItem="hfv-yM-5MX" secondAttribute="centerX" id="tVA-GV-mLW"/>
                                     <constraint firstItem="D37-97-rCO" firstAttribute="centerX" secondItem="hfv-yM-5MX" secondAttribute="centerX" id="xqJ-3T-jVf"/>
+                                    <constraint firstItem="5vH-hx-Tsg" firstAttribute="top" secondItem="hfv-yM-5MX" secondAttribute="top" constant="39" id="yue-tM-ela"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -168,6 +178,7 @@
                         <outlet property="FirstMatchOnlyCenterXConst" destination="UyZ-qz-0Bn" id="UsB-XS-4q8"/>
                         <outlet property="PhraseLabelCenterXConst" destination="tVA-GV-mLW" id="3bD-s6-LT9"/>
                         <outlet property="SearchTFCenterXConst" destination="xqJ-3T-jVf" id="peC-4L-mFj"/>
+                        <outlet property="firstLabel" destination="5vH-hx-Tsg" id="04m-lS-Mq7"/>
                         <outlet property="firstMatchLabel" destination="ePu-iN-EBc" id="zCl-bx-Nw3"/>
                         <outlet property="firstMatchSwitchCenterXConst" destination="jZW-Uq-2FN" id="DGU-cV-DuF"/>
                         <outlet property="firstMatchSwitchOutlet" destination="rJi-cN-q8T" id="JGX-5P-MRB"/>
