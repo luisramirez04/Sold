@@ -40,7 +40,9 @@ class SearchResultsTableViewController: UITableViewController {
     var matchedCommentsDates = [""]
     var firstMatch = [""]
     var matchedCommentIDs = [""]
-
+    
+    let indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+    
     let colors = [yellow, orange, magenta, purple, blue, lightBlue, green]
     
     
@@ -57,6 +59,12 @@ class SearchResultsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        indicator.color = UIColor.cyanColor()
+        indicator.frame = CGRectMake(0, 0, 30.0, 30.0)
+        indicator.center = self.view.center
+        self.view.addSubview(indicator)
+        indicator.bringSubviewToFront(self.view)
+        indicator.startAnimating()
         
         
         self.title = searchTerm
@@ -172,6 +180,7 @@ class SearchResultsTableViewController: UITableViewController {
                                                                                     dispatch_async(dispatch_get_main_queue()) {
                                                                                         () -> Void in
                                                                                         self.tableView.reloadData()
+                                                                                        self.indicator.stopAnimating()
                                                                                         
                                                                                         
                                                                                     }
