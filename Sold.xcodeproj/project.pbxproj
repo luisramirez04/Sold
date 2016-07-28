@@ -18,6 +18,7 @@
 		A0681B761D318C7A00CAF35F /* SearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0681B751D318C7A00CAF35F /* SearchResultsTableViewController.swift */; };
 		A0681B7E1D380A0000CAF35F /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0681B7D1D380A0000CAF35F /* Cell.swift */; };
 		A09DCAAD1D45AAAE009B07D7 /* MoreInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A09DCAAC1D45AAAE009B07D7 /* MoreInfoViewController.swift */; };
+		A09DCAAF1D4A8633009B07D7 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A09DCAAE1D4A8633009B07D7 /* CustomButton.swift */; };
 		A0D1C8BC1D3C5EB100169BC8 /* AnimationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D1C8BB1D3C5EB100169BC8 /* AnimationEngine.swift */; };
 		BE3C2A867FA5D6D68D611FB6 /* Pods_Sold.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB1A30F98096EC1A93A8CE22 /* Pods_Sold.framework */; };
 /* End PBXBuildFile section */
@@ -36,6 +37,7 @@
 		A0681B751D318C7A00CAF35F /* SearchResultsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsTableViewController.swift; sourceTree = "<group>"; };
 		A0681B7D1D380A0000CAF35F /* Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		A09DCAAC1D45AAAE009B07D7 /* MoreInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreInfoViewController.swift; sourceTree = "<group>"; };
+		A09DCAAE1D4A8633009B07D7 /* CustomButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		A0D1C8B81D3C5DD500169BC8 /* Sold-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sold-Bridging-Header.h"; sourceTree = "<group>"; };
 		A0D1C8BB1D3C5EB100169BC8 /* AnimationEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationEngine.swift; sourceTree = "<group>"; };
 		CB1A30F98096EC1A93A8CE22 /* Pods_Sold.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Sold.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -96,6 +98,7 @@
 				A0681B5F1D2C42BF00CAF35F /* Main.storyboard */,
 				A09DCAAC1D45AAAE009B07D7 /* MoreInfoViewController.swift */,
 				A0681B751D318C7A00CAF35F /* SearchResultsTableViewController.swift */,
+				A09DCAAE1D4A8633009B07D7 /* CustomButton.swift */,
 				A0681B7D1D380A0000CAF35F /* Cell.swift */,
 				A0681B621D2C42BF00CAF35F /* Assets.xcassets */,
 				A0681B641D2C42BF00CAF35F /* LaunchScreen.storyboard */,
@@ -240,6 +243,7 @@
 				A0681B7E1D380A0000CAF35F /* Cell.swift in Sources */,
 				A0681B5C1D2C42BF00CAF35F /* AppDelegate.swift in Sources */,
 				A09DCAAD1D45AAAE009B07D7 /* MoreInfoViewController.swift in Sources */,
+				A09DCAAF1D4A8633009B07D7 /* CustomButton.swift in Sources */,
 				A0D1C8BC1D3C5EB100169BC8 /* AnimationEngine.swift in Sources */,
 				A0681B761D318C7A00CAF35F /* SearchResultsTableViewController.swift in Sources */,
 			);

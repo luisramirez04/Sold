@@ -2,7 +2,7 @@
 //  CustomButton.swift
 //  Sold
 //
-//  Created by Luis Ramirez on 7/17/16.
+//  Created by Luis Ramirez on 7/28/16.
 //  Copyright © 2016 Luis Ramirez. All rights reserved.
 //
 
@@ -63,22 +63,4 @@ class CustomButton: UIButton {
     }
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
