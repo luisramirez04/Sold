@@ -177,13 +177,12 @@ class SearchResultsTableViewController: UITableViewController {
                                                                                     let data = NSData(contentsOfURL: imageURL!)
                                                                                     let commentImage = UIImage(data: data!)
                                                                                     self.commentObject.append(commentImage!)
-                                                                                    dispatch_async(dispatch_get_main_queue()) {
-                                                                                        () -> Void in
+                                                                                   
                                                                                         self.tableView.reloadData()
                                                                                         self.indicator.stopAnimating()
                                                                                         
                                                                                         
-                                                                                    }
+                                                                                    
                                                               
                                                                                 }
                                                                             }
