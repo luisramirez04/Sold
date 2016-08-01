@@ -83,7 +83,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
             searchTF.hidden = true
             searchLabel.hidden = true
             loginView.center = self.view.center
-            loginView.readPermissions = ["public_profile", "user_managed_groups"]
+            loginView.readPermissions = ["public_profile", "user_managed_groups", "user_friends"]
         
             self.view.addSubview(loginView)
 

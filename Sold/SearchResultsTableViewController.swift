@@ -40,6 +40,8 @@ class SearchResultsTableViewController: UITableViewController {
     var matchedCommentsDates = [""]
     var firstMatch = [""]
     var matchedCommentIDs = [""]
+    var albumCount = 0
+    var photoCount = 0
     
     let indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
     
@@ -98,6 +100,8 @@ class SearchResultsTableViewController: UITableViewController {
                 
                 for arrayResult in self.albumResultArray { // loop through data items
                     
+                    self.albumCount += 1
+                  
                     if let AlbumID = arrayResult["id"] as? String {
                         
                         FBSDKGraphRequest.init(graphPath: "\(AlbumID)/photos", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
@@ -110,6 +114,7 @@ class SearchResultsTableViewController: UITableViewController {
                                 
                                 for photoResult in self.photoIDResultArray { // loop through data items
                                     
+                        
                                     if let photos = photoResult["id"] as? String {
                                         
                                         FBSDKGraphRequest.init(graphPath: "\(photos)/comments", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
@@ -140,27 +145,22 @@ class SearchResultsTableViewController: UITableViewController {
                                                                     print(error)
                                                                 } else if error == nil {
                                                                     
+                                                        
                                                                     self.matchedCommentIDs.append(matchedCommentID)
                                                                     
-                                                                    if let commentMessage = result["message"]! {
-                                                         
-                                                                            self.commentMessage.append(commentMessage as! String)
-                                                    
-                                                                    }
-                                                                    
-                                                                    if let commentTime = result["created_time"] {
+                                                                    let message = result["message"]!
+                                                        
+                                                                    let commentTime = result["created_time"]!
                                                                         
                                                                         self.df.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZ"
                                                                         var date = self.df.dateFromString(commentTime as! String)
                                                                         self.df.dateFormat = "eee MMM dd, yyyy hh:mm"
                                                                         var dateStr = self.df.stringFromDate(date!)
-                                                                        self.commentTime.append(dateStr)
-                                                                    }
                                                                     
-                                                                    if let thePerson = result["from"] as? NSDictionary {
-                                                                    self.commentFrom.append(thePerson["name"] as! String)
-                                                                    }
                                                                     
+                                                                    
+                                                                    let thePerson = result["from"] as? NSDictionary
+                                                               
                                                                     if let theObject = result["object"] as? NSDictionary {
                                                                         let theObjectID = theObject["id"] as! String
                                                                         
@@ -177,6 +177,9 @@ class SearchResultsTableViewController: UITableViewController {
                                                                                     let data = NSData(contentsOfURL: imageURL!)
                                                                                     let commentImage = UIImage(data: data!)
                                                                                     self.commentObject.append(commentImage!)
+                                                                                    self.commentMessage.append(message as! String)
+                                                                                    self.commentTime.append(dateStr)
+                                                                                    self.commentFrom.append(thePerson!["name"] as! String)
                                                                                    
                                                                                         self.tableView.reloadData()
                                                                                         self.indicator.stopAnimating()
@@ -198,11 +201,12 @@ class SearchResultsTableViewController: UITableViewController {
                                                             }
                                                             
                                                             }
-                                                        }
+                                                         }
                                                         
                                                     }
                                                         
                                                     }
+                                                   
                                                 }
                                                 
                                             }
@@ -212,7 +216,7 @@ class SearchResultsTableViewController: UITableViewController {
                                     }
                                     
                                 }
-                                
+                                  
                             }
                             
                         }
@@ -257,7 +261,7 @@ class SearchResultsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         var safariAlert = UIAlertController(title: "Open Safari?", message: "Would you like to open Facebook in Safari?", preferredStyle: .Alert)
         safariAlert.addAction(UIAlertAction(title: "Yes", style: .Default, handler: { (action: UIAlertAction) -> Void in
-            var urlString = "https://www.facebook.com/\(self.matchedCommentIDs[indexPath.row])"
+            var urlString = "https://facebook.com/\(self.matchedCommentIDs[indexPath.row])"
             var url = NSURL(string: urlString)
             UIApplication.sharedApplication().openURL(url!)
         }))
