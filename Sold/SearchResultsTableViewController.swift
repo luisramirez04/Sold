@@ -20,7 +20,7 @@ let green = UIColor(colorLiteralRed: 0.439, green: 1.000, blue: 0.741, alpha: 0.
 
 class SearchResultsTableViewController: UITableViewController {
     
-
+    
     var searchTerm = String()
     var groupID = String()
     var firstMatchOnly = Bool()
@@ -42,6 +42,7 @@ class SearchResultsTableViewController: UITableViewController {
     var matchedCommentIDs = [""]
     var albumCount = 0
     var photoCount = 0
+    var onlyByUser = Bool()
     
     let indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
     
@@ -61,6 +62,7 @@ class SearchResultsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+       
         indicator.color = UIColor.cyanColor()
         indicator.frame = CGRectMake(0, 0, 30.0, 30.0)
         indicator.center = self.view.center
@@ -70,9 +72,9 @@ class SearchResultsTableViewController: UITableViewController {
         
         
         self.title = searchTerm
-
-            getResults()
-
+        
+        getResults()
+        
         
     }
     
@@ -92,7 +94,7 @@ class SearchResultsTableViewController: UITableViewController {
         
         FBSDKGraphRequest.init(graphPath: "\(groupID)/albums", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
             if error != nil {
-                print(error)
+              
             } else if error == nil {
                 
                 
@@ -101,12 +103,12 @@ class SearchResultsTableViewController: UITableViewController {
                 for arrayResult in self.albumResultArray { // loop through data items
                     
                     self.albumCount += 1
-                  
+                    
                     if let AlbumID = arrayResult["id"] as? String {
                         
-                        FBSDKGraphRequest.init(graphPath: "\(AlbumID)/photos", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
+                        FBSDKGraphRequest.init(graphPath: "\(AlbumID)/photos", parameters: ["fields":"id, from"]).startWithCompletionHandler { (connection, result, error) -> Void in
                             if error != nil {
-                                print(error)
+                               
                             } else if error == nil {
                                 
                                 
@@ -114,118 +116,232 @@ class SearchResultsTableViewController: UITableViewController {
                                 
                                 for photoResult in self.photoIDResultArray { // loop through data items
                                     
-                        
-                                    if let photos = photoResult["id"] as? String {
+                                    if self.onlyByUser == true {
+                                        let photoFrom = photoResult["from"] as! NSDictionary
+                                      
                                         
-                                        FBSDKGraphRequest.init(graphPath: "\(photos)/comments", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
-                                            if error != nil {
-                                                print(error)
-                                            } else if error == nil {
-  
-                                                self.commentsIDResultArray = result["data"] as! NSArray
+                                        if photoFrom["id"] as! String == FBSDKAccessToken.currentAccessToken().userID {
+                                            
+                                            if let photos = photoResult["id"] as? String {
                                                 
-                                                var foundMatch = false
-                                                
-                                                for commentResult in self.commentsIDResultArray { // loop through data items
-                                                    
-                                                    if foundMatch == false {
-                                                    
-                                                    if let comments = commentResult["message"] as? String {
+                                                FBSDKGraphRequest.init(graphPath: "\(photos)/comments", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
+                                                    if error != nil {
+                                                  
+                                                    } else if error == nil {
                                                         
-                                                         if comments.lowercaseString.containsString(self.searchTerm) {
+                                                        self.commentsIDResultArray = result["data"] as! NSArray
+                                                        
+                                                        var foundMatch = false
+                                                        
+                                                        for commentResult in self.commentsIDResultArray { // loop through data items
                                                             
-                                                            if self.firstMatchOnly == true {
-                                                                foundMatch = true
+                                                            if foundMatch == false {
+                                                                
+                                                                if let comments = commentResult["message"] as? String {
+                                                                    
+                                                                    if comments.lowercaseString.containsString(self.searchTerm) {
+                                                                        
+                                                                        if self.firstMatchOnly == true {
+                                                                            foundMatch = true
+                                                                        }
+                                                                        
+                                                                        if let matchedCommentID = commentResult["id"] as? String {
+                                                                            
+                                                                            FBSDKGraphRequest.init(graphPath: "/\(matchedCommentID)", parameters: ["fields":"id, from, created_time, message, object"]).startWithCompletionHandler { (connection, result, error) -> Void in
+                                                                                if error != nil {
+                                                                               
+                                                                                } else if error == nil {
+                                                                                    
+                                                                                    
+                                                                                    self.matchedCommentIDs.append(matchedCommentID)
+                                                                                    
+                                                                                    let message = result["message"]!
+                                                                                    
+                                                                                    let commentTime = result["created_time"]!
+                                                                                    
+                                                                                    self.df.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZ"
+                                                                                    var date = self.df.dateFromString(commentTime as! String)
+                                                                                    self.df.dateFormat = "eee MMM dd, yyyy hh:mm"
+                                                                                    var dateStr = self.df.stringFromDate(date!)
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    let thePerson = result["from"] as? NSDictionary
+                                                                                    
+                                                                                    if let theObject = result["object"] as? NSDictionary {
+                                                                                        let theObjectID = theObject["id"] as! String
+                                                                                        
+                                                                                        FBSDKGraphRequest.init(graphPath: "/\(theObjectID)", parameters: ["fields":"picture.type(large)"]).startWithCompletionHandler { (connection, result, error) -> Void in
+                                                                                            if error != nil {
+                                                                                              
+                                                                                            } else if error == nil {
+                                                                                                
+                                                                                                
+                                                                                                if let imageURLString = result["picture"] as? String {
+                                                                                                    
+                                                                                                    
+                                                                                                    let imageURL = NSURL(string: imageURLString)
+                                                                                                    let data = NSData(contentsOfURL: imageURL!)
+                                                                                                    let commentImage = UIImage(data: data!)
+                                                                                                    self.commentObject.append(commentImage!)
+                                                                                                    self.commentMessage.append(message as! String)
+                                                                                                    self.commentTime.append(dateStr)
+                                                                                                    self.commentFrom.append(thePerson!["name"] as! String)
+                                                                                                    
+                                                                                                    self.tableView.reloadData()
+                                                                                                    self.indicator.stopAnimating()
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                        
+                                                                                        
+                                                                                    }
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                }
+                                                                            }
+                                                                            
+                                                                        }
+                                                                    }
+                                                                    
+                                                                }
+                                                                
                                                             }
                                                             
-                                                            if let matchedCommentID = commentResult["id"] as? String {
+                                                        }
+                                                        
+                                                    }
+                                                    
+                                                }
+                                                
+                                            }
+                                        }
+                                        
+                                    }
+                                    else if self.onlyByUser == false {
+                                        
+                                        if let photos = photoResult["id"] as? String {
+                                            
+                                            FBSDKGraphRequest.init(graphPath: "\(photos)/comments", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
+                                                if error != nil {
+                                                    
+                                                } else if error == nil {
+                                                    
+                                                    self.commentsIDResultArray = result["data"] as! NSArray
+                                                    
+                                                    var foundMatch = false
+                                                    
+                                                    for commentResult in self.commentsIDResultArray { // loop through data items
+                                                        
+                                                        if foundMatch == false {
                                                             
-                                                            FBSDKGraphRequest.init(graphPath: "/\(matchedCommentID)", parameters: ["fields":"id, from, created_time, message, object"]).startWithCompletionHandler { (connection, result, error) -> Void in
-                                                                if error != nil {
-                                                                    print(error)
-                                                                } else if error == nil {
+                                                            if let comments = commentResult["message"] as? String {
+                                                                
+                                                                if comments.lowercaseString.containsString(self.searchTerm) {
                                                                     
-                                                        
-                                                                    self.matchedCommentIDs.append(matchedCommentID)
+                                                                    if self.firstMatchOnly == true {
+                                                                        foundMatch = true
+                                                                    }
                                                                     
-                                                                    let message = result["message"]!
-                                                        
-                                                                    let commentTime = result["created_time"]!
+                                                                    if let matchedCommentID = commentResult["id"] as? String {
                                                                         
-                                                                        self.df.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZ"
-                                                                        var date = self.df.dateFromString(commentTime as! String)
-                                                                        self.df.dateFormat = "eee MMM dd, yyyy hh:mm"
-                                                                        var dateStr = self.df.stringFromDate(date!)
-                                                                    
-                                                                    
-                                                                    
-                                                                    let thePerson = result["from"] as? NSDictionary
-                                                               
-                                                                    if let theObject = result["object"] as? NSDictionary {
-                                                                        let theObjectID = theObject["id"] as! String
-                                                                        
-                                                                        FBSDKGraphRequest.init(graphPath: "/\(theObjectID)", parameters: ["fields":"picture.type(large)"]).startWithCompletionHandler { (connection, result, error) -> Void in
+                                                                        FBSDKGraphRequest.init(graphPath: "/\(matchedCommentID)", parameters: ["fields":"id, from, created_time, message, object"]).startWithCompletionHandler { (connection, result, error) -> Void in
                                                                             if error != nil {
-                                                                                print(error)
+                                                                             
                                                                             } else if error == nil {
                                                                                 
                                                                                 
-                                                                                if let imageURLString = result["picture"] as? String {
+                                                                                self.matchedCommentIDs.append(matchedCommentID)
+                                                                                
+                                                                                let message = result["message"]!
+                                                                                
+                                                                                let commentTime = result["created_time"]!
+                                                                                
+                                                                                self.df.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZ"
+                                                                                var date = self.df.dateFromString(commentTime as! String)
+                                                                                self.df.dateFormat = "eee MMM dd, yyyy hh:mm"
+                                                                                var dateStr = self.df.stringFromDate(date!)
+                                                                                
+                                                                                
+                                                                                
+                                                                                let thePerson = result["from"] as? NSDictionary
+                                                                                
+                                                                                if let theObject = result["object"] as? NSDictionary {
+                                                                                    let theObjectID = theObject["id"] as! String
+                                                                                    
+                                                                                    FBSDKGraphRequest.init(graphPath: "/\(theObjectID)", parameters: ["fields":"picture.type(large)"]).startWithCompletionHandler { (connection, result, error) -> Void in
+                                                                                        if error != nil {
+                                                                                            
+                                                                                        } else if error == nil {
+                                                                                            
+                                                                                            
+                                                                                            if let imageURLString = result["picture"] as? String {
+                                                                                                
+                                                                                                
+                                                                                                let imageURL = NSURL(string: imageURLString)
+                                                                                                let data = NSData(contentsOfURL: imageURL!)
+                                                                                                let commentImage = UIImage(data: data!)
+                                                                                                self.commentObject.append(commentImage!)
+                                                                                                self.commentMessage.append(message as! String)
+                                                                                                self.commentTime.append(dateStr)
+                                                                                                self.commentFrom.append(thePerson!["name"] as! String)
+                                                                                                
+                                                                                                self.tableView.reloadData()
+                                                                                                self.indicator.stopAnimating()
+                                                                                                
+                                                                                                
+                                                                                                
+                                                                                                
+                                                                                            }
+                                                                                        }
+                                                                                    }
                                                                                     
                                                                                     
-                                                                                    let imageURL = NSURL(string: imageURLString)
-                                                                                    let data = NSData(contentsOfURL: imageURL!)
-                                                                                    let commentImage = UIImage(data: data!)
-                                                                                    self.commentObject.append(commentImage!)
-                                                                                    self.commentMessage.append(message as! String)
-                                                                                    self.commentTime.append(dateStr)
-                                                                                    self.commentFrom.append(thePerson!["name"] as! String)
-                                                                                   
-                                                                                        self.tableView.reloadData()
-                                                                                        self.indicator.stopAnimating()
-                                                                                        
-                                                                                        
-                                                                                    
-                                                              
                                                                                 }
+                                                                                
+                                                                                
+                                                                                
+                                                                                
                                                                             }
                                                                         }
-                                        
                                                                         
                                                                     }
-                                                                    
-                                                                    
-                                                                   
-                                                                    
                                                                 }
+                                                                
                                                             }
                                                             
-                                                            }
-                                                         }
+                                                        }
                                                         
                                                     }
-                                                        
-                                                    }
-                                                   
+                                                    
                                                 }
                                                 
                                             }
                                             
                                         }
                                         
+                                        
                                     }
                                     
+                                    
                                 }
-                                  
                             }
                             
                         }
+                        
                     }
-                    
                 }
+                
             }
         }
     }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -274,7 +390,7 @@ class SearchResultsTableViewController: UITableViewController {
         presentViewController(safariAlert, animated: true, completion: nil)
         
     }
- 
+    
     /*
      // Override to support conditional editing of the table view.
      override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {

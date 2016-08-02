@@ -13,6 +13,8 @@ import pop
 
 class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
 
+    @IBOutlet weak var secondMissingLabelCenterConst: NSLayoutConstraint!
+    @IBOutlet weak var firstMissingLabelCenterConst: NSLayoutConstraint!
     @IBOutlet weak var firstLabel: UILabel!
     @IBOutlet weak var groupsTableView: UITableView!
     var loginView = FBSDKLoginButton()
@@ -21,12 +23,20 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
     var groupIDs = [""]
     var currentGroupID = ""
     var firstMatchOnly = true
+    var onlyByUser = true
     
     var animEngine: AnimationEngine!
     
+    @IBAction func onlyByUserSwitchAction(sender: AnyObject) {
+        if onlyByUser == true {
+            onlyByUser = false
+        } else if onlyByUser == false {
+            onlyByUser = true
+        }
+    }
+    @IBOutlet weak var onlyByUserSwitchOutlet: UISwitch!
+    @IBOutlet weak var onlyByUserLabel: UILabel!
     @IBOutlet weak var searchButtonCenterXConst: NSLayoutConstraint!
-    @IBOutlet weak var firstMatchSwitchCenterXConst: NSLayoutConstraint!
-    @IBOutlet weak var FirstMatchOnlyCenterXConst: NSLayoutConstraint!
     @IBOutlet weak var SearchTFCenterXConst: NSLayoutConstraint!
     @IBOutlet weak var PhraseLabelCenterXConst: NSLayoutConstraint!
     @IBOutlet weak var groupsLabelCenterXConst: NSLayoutConstraint!
@@ -73,7 +83,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
         
         loginView.delegate = self
         self.navigationController?.navigationBar.hidden = true
-            self.animEngine = AnimationEngine(constraints: [welcomeCenterXConst, SearchTFCenterXConst, groupsLabelCenterXConst, groupsTableCenterXConst, PhraseLabelCenterXConst, searchButtonCenterXConst, FirstMatchOnlyCenterXConst, firstMatchSwitchCenterXConst])
+            self.animEngine = AnimationEngine(constraints: [welcomeCenterXConst, SearchTFCenterXConst, groupsLabelCenterXConst, groupsTableCenterXConst, PhraseLabelCenterXConst, searchButtonCenterXConst, firstMissingLabelCenterConst, secondMissingLabelCenterConst])
 
             firstMatchSwitchOutlet.hidden = true
             firstMatchLabel.hidden = true
@@ -82,8 +92,10 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
             phraseLabel.hidden = true
             searchTF.hidden = true
             searchLabel.hidden = true
+            onlyByUserLabel.hidden = true
+            onlyByUserSwitchOutlet.hidden = true
             loginView.center = self.view.center
-            loginView.readPermissions = ["public_profile", "user_managed_groups", "user_friends"]
+            loginView.readPermissions = ["public_profile", "user_managed_groups"]
         
             self.view.addSubview(loginView)
 
@@ -129,6 +141,8 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
         phraseLabel.hidden = true
         searchTF.hidden = true
         searchLabel.hidden = true
+        onlyByUserLabel.hidden = true
+        onlyByUserSwitchOutlet.hidden = true
         loginView.center = self.view.center
     }
     
@@ -157,7 +171,6 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
         {
             
             self.animEngine.animateOnScreen(1)
-            //firstView.hidden = true
             firstLabel.hidden = true
             groupsLabel.hidden = false
             groupsTableView.hidden = false
@@ -166,11 +179,13 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
             searchLabel.hidden = false
             firstMatchSwitchOutlet.hidden = false
             firstMatchLabel.hidden = false
-            loginView.center = CGPoint(x: self.view.bounds.width / 2 , y: self.view.bounds.height - 50)
+            onlyByUserLabel.hidden = false
+            onlyByUserSwitchOutlet.hidden = false
+            loginView.center = CGPoint(x: self.view.bounds.width / 2 , y: self.view.bounds.height - 20)
             
             FBSDKGraphRequest.init(graphPath: "me", parameters: ["fields":""]).startWithCompletionHandler { (connection, result, error) -> Void in
                 if error != nil {
-                    print(error)
+                  
                 } else if error == nil {
                     
                     let userName = result["name"] as! String
@@ -182,7 +197,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
             
             FBSDKGraphRequest.init(graphPath: "me/groups", parameters: ["fields":"name"]).startWithCompletionHandler { (connection, result, error) -> Void in
                 if error != nil {
-                    print(error)
+                  
                 } else if error == nil {
                     
                     self.groupNames.removeAll(keepCapacity: true)
@@ -227,6 +242,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDel
                 destination.searchTerm = (searchTF.text?.lowercaseString)!
                 destination.groupID = currentGroupID
                 destination.firstMatchOnly = firstMatchOnly
+                destination.onlyByUser = onlyByUser
                 
             }
         }
